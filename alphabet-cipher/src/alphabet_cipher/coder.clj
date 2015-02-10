@@ -4,16 +4,19 @@
 
 (def dict (zipmap alphabet (iterate inc 0)))
 
-(defn code 
-  [f [k m]]
-  (alphabet 
-    (mod (f (dict k) (dict m)) (count alphabet))))
+(defn- character-at-intersection
+  [position]
+  (alphabet (mod position (count alphabet))))
 
-(defn key-msg
+(defn- code 
+  [f [k m]]
+  (character-at-intersection (f (dict k) (dict m))))
+
+(defn- key-msg
   [keyword message]
   (into [] (map vector keyword message)))
 
-(defn perform-coding
+(defn- perform-coding
   [summation-fn msg-1 msg-2]
   (apply
     str
