@@ -22,3 +22,7 @@
 (deftest test-play-game
   (testing "the player loses when they run out of cards"))
 
+(deftest test-deal
+  (testing "deal create two decks of cards")
+    (is (= 2 (count (deal cards)))))
+

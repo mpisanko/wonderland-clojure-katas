@@ -12,23 +12,23 @@
 (def rank-values (zipmap ranks (iterate inc 0)))
 
 (defn compare-suits
-  [card-1 card-2]
-  (let [sub (- (suit-values (first card-1)) (suit-values (first card-2)))]
+  [[suit-1 _ :as card-1] [suit-2 _ :as card-2]]
+  (let [sub (- (suit-values suit-1) (suit-values suit-2))]
     (cond 
       (pos? sub) [[card-1 card-2] []]
       (neg? sub) [[] [card-1 card-2]]
       :else [[card-1] [card-2]])))
 
 (defn compare-ranks
-  [card-1 card-2]
-  (let [sub (- (rank-values (second card-1)) (rank-values (second card-2)))]
+  [[_ rank-1 :as card-1] [_ rank-2 :as card-2]]
+  (let [sub (- (rank-values rank-1) (rank-values rank-2))]
     (cond 
       (zero? sub) (compare-suits card-1 card-2)
       (pos? sub) [[card-1 card-2] []]
       :else [[] [card-1 card-2]])))
 
-(defn- deal
-  []
+(defn deal
+  [cards]
   (reduce 
     (fn 
       [[deck-1 deck-2] [card-1 card-2]]
