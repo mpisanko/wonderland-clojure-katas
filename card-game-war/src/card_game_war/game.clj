@@ -36,6 +36,17 @@
     (vector (clojure.lang.PersistentQueue/EMPTY) (clojure.lang.PersistentQueue/EMPTY))
     (partition 2 (shuffle cards))))
 
-(defn play-round [player1-card player2-card])
+(defn- append-unless-empty
+  [coll elems]
+  (if (seq elems)
+    (apply conj coll (seq elems))
+    coll))
+
+(defn play-round [player1-cards player2-cards]
+  (let [player1-card (peek player1-cards)
+        player2-card (peek player2-cards)
+        [player1-round player2-round] (compare-ranks player1-card player2-card)]
+    [(append-unless-empty (pop player1-cards) player1-round) 
+     (append-unless-empty (pop player2-cards) player2-round)]))
 
 (defn play-game [player1-cards player2-cards])

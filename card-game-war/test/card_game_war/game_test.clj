@@ -2,6 +2,11 @@
   (:require [clojure.test :refer :all]
             [card-game-war.game :refer :all]))
 
+(defmethod print-method clojure.lang.PersistentQueue
+[q, w]
+(print-method '<- w)
+(print-method (seq q) w)
+(print-method '-< w))
 
 ;; fill in  tests for your game
 (deftest test-play-round
@@ -18,6 +23,22 @@
       (is (= [[[:diamond 5] [:club 5]][]]) (compare-ranks [:diamond 5] [:club 5])))
     (testing "if the ranks are equal, hearts beat diamonds"
       (is (= [[[:heart 10] [:diamond 10]][]]) (compare-ranks [:heart 10] [:diamond 10])))))
+
+(deftest test-play-round
+  (testing "play round gives both cards to the side which had higher card"
+    (testing "player-1 has upper hand, gets both the cards"
+      (is (= [(conj clojure.lang.PersistentQueue/EMPTY [:heart :queen] [:heart :jack]) 
+                clojure.lang.PersistentQueue/EMPTY] 
+              (play-round 
+                (conj clojure.lang.PersistentQueue/EMPTY [:heart :queen]) 
+                (conj clojure.lang.PersistentQueue/EMPTY [:heart :jack])))))
+    (testing "player-2 has upper hand, get both cards"
+      (is (=  [clojure.lang.PersistentQueue/EMPTY 
+                (conj clojure.lang.PersistentQueue/EMPTY [:diamond 2] [:club 3])] 
+              (play-round 
+                (conj clojure.lang.PersistentQueue/EMPTY [:diamond 2])
+                (conj clojure.lang.PersistentQueue/EMPTY [:club 3]))))))) 
+
 
 (deftest test-play-game
   (testing "the player loses when they run out of cards"))
