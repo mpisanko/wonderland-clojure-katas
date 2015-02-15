@@ -2,11 +2,12 @@
   (:require [clojure.test :refer :all]
             [card-game-war.game :refer :all]))
 
+;; print better representation of Qs
 (defmethod print-method clojure.lang.PersistentQueue
-[q, w]
-(print-method '<- w)
-(print-method (seq q) w)
-(print-method '-< w))
+  [q, w]
+  (print-method '<- w)
+  (print-method (seq q) w)
+  (print-method '-< w))
 
 ;; fill in  tests for your game
 (deftest test-play-round
@@ -41,7 +42,13 @@
 
 
 (deftest test-play-game
-  (testing "the player loses when they run out of cards"))
+  (testing "the player loses when they run out of cards"
+    (are [cards-1 cards-2] (= [:winner :loser] (play-game cards-1 cards-2))
+      [[:heart :king] [:diamond :ace]] [[:heart :queen] [:heart :jack]]
+      [[:club 2] [:diamond :king]] [[:heart 1] [:spade :king]])
+    (are [cards-1 cards-2] (= [:loser :winner] (play-game cards-1 cards-2))
+      [[:club 1] [:spade 1] [:diamond 1]] [[:club 2] [:heart 2]]
+      [[:heart :queen] [:heart :jack]] [[:club :ace] [:diamond :ace]])))
 
 (deftest test-deal
   (testing "deal create two decks of cards")

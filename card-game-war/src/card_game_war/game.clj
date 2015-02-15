@@ -41,11 +41,19 @@
     (apply conj coll (seq elems))
     coll))
 
-(defn play-round [player1-cards player2-cards]
+(defn play-round 
+  [player1-cards player2-cards]
   (let [player1-card (peek player1-cards)
         player2-card (peek player2-cards)
         [player1-round player2-round] (compare-and-distribute player1-card player2-card)]
     [(append-unless-empty (pop player1-cards) player1-round) 
      (append-unless-empty (pop player2-cards) player2-round)]))
 
-(defn play-game [player1-cards player2-cards])
+(defn play-game 
+  [player1-cards player2-cards]
+  (if (and (seq player1-cards) (seq player2-cards))
+    (let [[new-deck-1 new-deck-2] (play-round player1-cards player2-cards)]
+      (recur new-deck-1 new-deck-2))
+    (if (seq player1-cards)
+      [:winner :loser]
+      [:loser :winner])))
